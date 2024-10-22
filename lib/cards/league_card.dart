@@ -1,27 +1,36 @@
 import 'package:allwin/cards/each_league_game.dart';
 import 'package:flutter/material.dart';
+import 'package:badges/badges.dart' as badges;
 
-class LeagueCard extends StatelessWidget {
+class LeagueCard extends StatefulWidget {
   final String title;
-  final subTitle;
+  final dynamic subTitle;
   final String leagueImage;
   final List matches;
+  final double currentWidth;
+
   const LeagueCard({
-    super.key,
+    Key? key,
     required this.currentWidth,
     required this.title,
     required this.subTitle,
     required this.leagueImage,
     required this.matches,
-  });
+  }) : super(key: key);
 
-  final double currentWidth;
+  @override
+  _LeagueCardState createState() => _LeagueCardState();
+}
+
+class _LeagueCardState extends State<LeagueCard> {
+  int?
+      _expandedIndex; // Track the index of the currently expanded ExpansionTile
 
   @override
   Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints(
-        maxWidth: currentWidth,
+        maxWidth: widget.currentWidth,
         minHeight: 90,
       ),
       child: Column(
@@ -36,7 +45,7 @@ class LeagueCard extends StatelessWidget {
                       height: 25,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage(leagueImage),
+                          image: AssetImage(widget.leagueImage),
                         ),
                       ),
                     ),
@@ -45,7 +54,7 @@ class LeagueCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          title,
+                          widget.title,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 13,
@@ -53,7 +62,7 @@ class LeagueCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          subTitle.toString(),
+                          widget.subTitle.toString(),
                           style: const TextStyle(
                             color: Colors.white54,
                             fontSize: 11,
@@ -72,26 +81,37 @@ class LeagueCard extends StatelessWidget {
             ],
           ),
           ListView.builder(
-            // itemCount: matches.length,
-            itemCount: 8,
+            itemCount: widget.matches.length,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index1) {
-              // final games = gamesInsideLeague[index];
-              var insiders = matches[index1];
-              String homeTeam = insiders["home_team"];
-              String awayTeam = insiders["away_team"];
+            itemBuilder: (context, index) {
+              var insiders = widget.matches[index];
+
+              String homeTeam = insiders["home_team"].toString();
+              String awayTeam = insiders["away_team"].toString();
+              String gameTime = insiders["time"].toString();
+              List<String> predictions = (insiders["predictions"] as List)
+                  .map((p) => p.toString())
+                  .toList();
+
               return EachLeagueGameCard(
                 homeTeamTitle: homeTeam,
                 awayTeamTitle: awayTeam,
-                gameTime: insiders["time"],
+                gameTime: gameTime,
                 awayTeamClubImage: insiders["away_team_img"],
-                homeTeamClubmImage: insiders["home_team_img"],
-                prediction: insiders["predictions"],
+                homeTeamClubImage: insiders["home_team_img"],
+                prediction: predictions,
+                isExpanded:
+                    _expandedIndex == index, // Check if this index is expanded
+                onTap: () {
+                  setState(() {
+                    // Toggle the expansion state
+                    _expandedIndex = _expandedIndex == index ? null : index;
+                  });
+                },
               );
             },
           ),
-          //gamesssssssssss
         ],
       ),
     );
