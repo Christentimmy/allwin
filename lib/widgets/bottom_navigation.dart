@@ -1,7 +1,5 @@
 import 'package:allwin/pages/booking_code_screen.dart';
-import 'package:allwin/pages/events.dart';
 import 'package:allwin/pages/homepage_screen.dart';
-import 'package:allwin/pages/premium_screen.dart';
 import 'package:allwin/pages/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -19,7 +17,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
   // Regular List for static pages
   final List<Widget> appPages = [
     const HomeScreen(),
-    // const EventsScreen(),
     const BookingCodeScreen(),
     const ProfilePage(),
   ];
@@ -51,10 +48,13 @@ class _BottomNavigationState extends State<BottomNavigation> {
             color: Colors.white,
             backgroundColor: const Color(0xff161F2C),
             tabs: const [
-              GButton(icon: Icons.home, text: "Home"),
-              // GButton(icon: Icons.event, text: "Events"),
-              GButton(icon: Icons.book, text: "Booking Code"),
-              GButton(icon: Icons.person, text: "Account"),
+              GButton(icon: Icons.dashboard, text: "Home"), // Updated Home icon
+              GButton(
+                  icon: Icons.confirmation_number,
+                  text: "Booking Code"), // Updated Booking Code icon
+              GButton(
+                  icon: Icons.account_circle,
+                  text: "Account"), // Updated Profile icon
             ],
             padding: const EdgeInsets.all(10.0),
           ),

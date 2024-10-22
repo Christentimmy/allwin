@@ -24,7 +24,6 @@ class Match {
   });
 }
 
-
 class League {
   final String leagueDetails;
   final String leagueId;
@@ -35,4 +34,16 @@ class League {
     required this.leagueId,
     required this.matches,
   });
+}
+
+String determineStatus(Map<String, dynamic> insiders) {
+  // Add your logic here to determine the game status
+  // For example:
+  if (insiders["game_result"] == "win") {
+    return "win"; // Game is a win
+  } else if (insiders["game_result"] == "loss") {
+    return "loss"; // Game is a loss
+  } else {
+    return "process"; // Game is still in process
+  }
 }

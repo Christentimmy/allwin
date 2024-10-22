@@ -1,4 +1,5 @@
 import 'package:allwin/cards/each_league_game.dart';
+import 'package:allwin/model/get_matches_model.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -109,6 +110,8 @@ class _LeagueCardState extends State<LeagueCard> {
                     _expandedIndex = _expandedIndex == index ? null : index;
                   });
                 },
+                status: determineStatus(
+                    insiders), // Function to determine the status
               );
             },
           ),
