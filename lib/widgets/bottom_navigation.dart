@@ -19,7 +19,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   // Regular List for static pages
   final List<Widget> appPages = [
     const HomeScreen(),
-    const EventsScreen(),
+    // const EventsScreen(),
     const BookingCodeScreen(),
     const ProfilePage(),
   ];
@@ -52,8 +52,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
             backgroundColor: const Color(0xff161F2C),
             tabs: const [
               GButton(icon: Icons.home, text: "Home"),
-              GButton(icon: Icons.event, text: "Events"),
-              GButton(icon: Icons.book, text: "Premium"),
+              // GButton(icon: Icons.event, text: "Events"),
+              GButton(icon: Icons.book, text: "Booking Code"),
               GButton(icon: Icons.person, text: "Account"),
             ],
             padding: const EdgeInsets.all(10.0),
