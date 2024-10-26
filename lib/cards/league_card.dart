@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import 'package:allwin/cards/each_league_game.dart';
 import 'package:allwin/model/get_matches_model.dart';
 import 'package:flutter/material.dart';
@@ -120,3 +121,6 @@ class _LeagueCardState extends State<LeagueCard> {
     );
   }
 }
+=======
+
+>>>>>>> Stashed changes

@@ -1,4 +1,4 @@
-import 'package:allwin/cards/league_card.dart';
+import 'package:allwin/cards/each_league_game.dart';
 import 'package:allwin/controller/all_request.dart';
 import 'package:allwin/controller/auth_controller.dart';
 import 'package:allwin/widgets/calender_row.dart';
@@ -123,7 +123,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               const SizedBox(height: 10),
-              // const SportCategoryCard(),
               CalenderRow(authController: _authController),
               const SizedBox(height: 10),
               ShowMatches(currentWidth: currentWidth),
@@ -133,7 +132,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
 }
+
+
 
 class ShowMatches extends StatefulWidget {
   const ShowMatches({
@@ -149,11 +151,11 @@ class ShowMatches extends StatefulWidget {
 
 class _ShowMatchesState extends State<ShowMatches> {
   final _allMatches = Get.put(AllRequestController());
+
   @override
   void initState() {
     super.initState();
     if (!_allMatches.isMatchesLoaded.value) {
-      print("object");
       _allMatches.getLeagueMatch();
     }
   }
@@ -169,24 +171,105 @@ class _ShowMatchesState extends State<ShowMatches> {
                 ),
               ),
             )
-          : Expanded(child: Obx(() {
-              return ListView.builder(
+          : Expanded(
+              child: ListView.builder(
                 itemCount: _allMatches.allMatchesList.length,
                 itemBuilder: (context, index) {
                   final items = _allMatches.allMatchesList[index];
+                  String leagueName = items["league_details"];
                   List matches = items["matches"];
-                  print(matches.length);
-                  return LeagueCard(
-                    matches: items["matches"],
-                    currentWidth: widget.currentWidth,
-                    title: items["league_details"],
-                    subTitle: items["league_id"],
-                    // leagueImage: (items["league_details"]) == "Premier League" ? item[0]["image_icon"] : "",
-                    leagueImage: "assets/image/pl.jpg",
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      LeagueHeader(
+                        leagueName: leagueName,
+                        leagueImage: leagueImages[leagueName] ?? "",
+                        leagueId: items["league_id"],
+                      ),
+                      ...matches.map((match) {
+                        return EachLeagueGameCard(
+                          homeTeamTitle: match["home_team"],
+                          awayTeamTitle: match["away_team"],
+                          gameTime: match["time"],
+                          awayTeamClubImage: match["away_team_img"],
+                          homeTeamClubmImage: match["home_team_img"],
+                          prediction: (match["predictions"] as List<dynamic>) .join(", "),
+                        );
+                      }),
+                      const SizedBox(height: 20),
+                    ],
                   );
                 },
-              );
-            })),
+              ),
+            ),
     );
   }
 }
+
+class LeagueHeader extends StatelessWidget {
+  final String leagueName;
+  final String leagueImage;
+  final int leagueId;
+
+  const LeagueHeader({
+    super.key,
+    required this.leagueName,
+    required this.leagueImage,
+    required this.leagueId,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 25,
+          height: 25,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(leagueImage),
+            ),
+          ),
+        ),
+        const SizedBox(width: 15),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              leagueName,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            Text(
+              leagueId.toString(),
+              style: const TextStyle(
+                color: Colors.white54,
+                fontSize: 11,
+              ),
+            ),
+          ],
+        ),
+        const Spacer(),
+        const Icon(
+          Icons.keyboard_arrow_right,
+          color: Colors.white,
+        ),
+      ],
+    );
+  }
+}
+
+
+
+
+const Map<String, String> leagueImages = {
+  "Ligue 1": "assets/image/ligue1.png",
+  "Bundesliga": "assets/image/bun.png",
+  "Serie A": "assets/image/seriaA.png",
+  "LaLiga": "assets/image/laliga.png",
+  "Premier League": "assets/image/pl.png",
+  "Championship": "assets/image/championship.png",
+};

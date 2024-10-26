@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class EachLeagueGameCard extends StatelessWidget {
   final String homeTeamTitle;
   final String awayTeamTitle;
+<<<<<<< Updated upstream
   final List<String> prediction;
   final String homeTeamClubImage;
   final String awayTeamClubImage;
@@ -11,6 +12,12 @@ class EachLeagueGameCard extends StatelessWidget {
   final VoidCallback onTap; // Callback for tap events
   final String status; // New parameter for win/loss status
 
+=======
+  final String prediction;
+  final String homeTeamClubmImage;
+  final String awayTeamClubImage;
+  final String gameTime;
+>>>>>>> Stashed changes
   const EachLeagueGameCard({
     super.key,
     required this.homeTeamTitle,
@@ -19,9 +26,12 @@ class EachLeagueGameCard extends StatelessWidget {
     required this.homeTeamClubImage,
     required this.awayTeamClubImage,
     required this.gameTime,
+<<<<<<< Updated upstream
     required this.isExpanded,
     required this.onTap,
     required this.status, // Initialize the status
+=======
+>>>>>>> Stashed changes
   });
 
   @override
@@ -95,6 +105,7 @@ class EachLeagueGameCard extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
+<<<<<<< Updated upstream
               const SizedBox(width: 4),
               const Icon(
                 Icons.expand_more,
@@ -135,6 +146,28 @@ class EachLeagueGameCard extends StatelessWidget {
               onTap(); // Call the tap callback when expanded
             }
           },
+=======
+              const SizedBox(height: 6),
+              Text(
+                awayTeamTitle,
+                style: const TextStyle(
+                  color: Colors.white60,
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
+        ),
+        trailing: Padding(
+          padding: const EdgeInsets.only(right: 5),
+          child: Text(
+            prediction,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 13,
+            ),
+          ),
+>>>>>>> Stashed changes
         ),
       ),
     );

@@ -24,16 +24,34 @@ class Match {
   });
 }
 
+<<<<<<< Updated upstream
+=======
+
+// class League {
+//   final String leagueDetails;
+//   final String leagueId;
+//   final List<Match> matches;
+
+//   League({
+//     required this.leagueDetails,
+//     required this.leagueId,
+//     required this.matches,
+//   });
+// }
+
+
+>>>>>>> Stashed changes
 class League {
   final String leagueDetails;
-  final String leagueId;
-  final List<Match> matches;
+  final int leagueId;
+  final Map<String, List<Match>> matchesByDate;
 
   League({
     required this.leagueDetails,
     required this.leagueId,
-    required this.matches,
+    required this.matchesByDate,
   });
+<<<<<<< Updated upstream
 }
 
 String determineStatus(Map<String, dynamic> insiders) {
@@ -47,3 +65,6 @@ String determineStatus(Map<String, dynamic> insiders) {
     return "process"; // Game is still in process
   }
 }
+=======
+}
+>>>>>>> Stashed changes
