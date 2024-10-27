@@ -1,17 +1,11 @@
 import 'package:allwin/pages/login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../Resources/colors.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
 
-  @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
-}
-
-class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,7 +150,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     style: TextStyle(color: Colors.white),
                   ),
                   GestureDetector(
-                    onTap: () => Get.to(() => const LoginScreen()),
+                    onTap: () => Get.to(() =>  LoginScreen()),
                     child: const Text(
                       "Login",
                       style: TextStyle(

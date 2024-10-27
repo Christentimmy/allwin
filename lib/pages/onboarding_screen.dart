@@ -1,3 +1,5 @@
+import 'package:allwin/cards/common_button.dart';
+import 'package:allwin/cards/next_button.dart';
 import 'package:allwin/intro_screens/intro_page.dart';
 import 'package:allwin/intro_screens/intro_page2.dart';
 import 'package:allwin/intro_screens/intro_page3.dart';
@@ -36,92 +38,57 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 IntroPage3(),
               ],
             ),
-            Container(
-              alignment: const Alignment(0, 0.75),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                     Get.offAll(()=> const BottomNavigation());
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 25,
-                        vertical: 5,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: const Color(0xffFF6600),
-                      ),
-                      child: const Text(
-                        "Skip",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SmoothPageIndicator(
-                    controller: _controller,
-                    count: 3,
-                    effect: const WormEffect(
-                      activeDotColor: Color(0xffFF6600),
-                    ),
-                  ),
-                  onLastPage
-                      ? GestureDetector(
-                          onTap: () {
-                            Get.to(() => const BottomNavigation());
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 25, vertical: 5),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: const Color(0xffFF6600),
-                            ),
-                            child: const Text(
-                              "Continue",
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        )
-                      : GestureDetector(
-                          onTap: () {
-                            _controller.nextPage(
-                              duration: const Duration(milliseconds: 200),
-                              curve: Curves.easeIn,
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 25,
-                              vertical: 5,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: const Color(0xffFF6600),
-                            ),
-                            child: const Text(
-                              "Next",
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                ],
-              ),
-            )
+            IntroDownWidgets(controller: _controller, onLastPage: onLastPage)
           ],
         ),
       ),
     );
   }
 }
+
+
+class IntroDownWidgets extends StatelessWidget {
+  const IntroDownWidgets({
+    super.key,
+    required PageController controller,
+    required this.onLastPage,
+  }) : _controller = controller;
+
+  final PageController _controller;
+  final bool onLastPage;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: const Alignment(0, 0.75),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          // const SkipButton(),
+          CommonButton(
+            title: "Skip",
+            ontap: () {
+              Get.offAll(() => const BottomNavigation());
+            },
+          ),
+          SmoothPageIndicator(
+            controller: _controller,
+            count: 3,
+            effect: const WormEffect(
+              activeDotColor: Color(0xffFF6600),
+            ),
+          ),
+          onLastPage
+              ? CommonButton(
+                  title: "Continue",
+                  ontap: () {
+                    Get.offAll(() => const BottomNavigation());
+                  },
+                )
+              : NextButton(controller: _controller),
+        ],
+      ),
+    );
+  }
+}
+

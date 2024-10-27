@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 List sportCategory = [
@@ -89,7 +90,7 @@ List leagueDetails = [
   }
 ];
 
-List checf = [
+List games = [
   {
     "league_details": "Ligue 1",
     "league_id": 10,
@@ -116,6 +117,36 @@ List checf = [
         "is_premium": 1,
         "date": "2024-10-25",
         "time": "19:45:00",
+        "available_packages": "[\"3\"]"
+      },
+    ],
+  },
+  {
+    "league_details": "Serie A",
+    "league_id": 11,
+    "matches": [
+      {
+        "id": 5115,
+        "home_team_img": "torino-2912.png",
+        "home_team": "Torino",
+        "away_team_img": "como-9046.png",
+        "away_team": "Como",
+        "predictions": ["1X"],
+        "is_premium": 1,
+        "date": "2024-10-25",
+        "time": "19:45:00",
+        "available_packages": "[\"3\"]"
+      },
+      {
+        "id": 5114,
+        "home_team_img": "udinese-9810.jpg",
+        "home_team": "Udinese",
+        "away_team_img": "cagliari-9699.png",
+        "away_team": "Cagliari",
+        "predictions": ["0.5", "1X"],
+        "is_premium": 1,
+        "date": "2024-10-22",
+        "time": "19:30:00",
         "available_packages": "[\"3\"]"
       },
     ],
@@ -21916,3 +21947,34 @@ List allGames = [
     ]
   }
 ];
+
+const Map<String, String> leagueImages = {
+  "Ligue 1": "assets/image/ligue1.png",
+  "Premiership": "assets/image/scot.png",
+  "Primeira Liga": "assets/image/primeira-liga.jpg",
+  "Eredivisie": "assets/image/eredivisie.jpg",
+  "Bundesliga": "assets/image/bun.png",
+  "Serie A": "assets/image/seriaA.png",
+  "LaLiga": "assets/image/laliga.png",
+  "Premier League": "assets/image/pl.jpg",
+  "Championship": "assets/image/championship.png",
+};
+
+final Map<String, Map<String, dynamic>> sportsWithIcons = {
+    'Football': {
+      'icon': Icons.sports_football,
+      'color': Colors.green, // Football icon color
+    },
+    'Basketball': {
+      'icon': Icons.sports_basketball,
+      'color': Colors.orange, // Basketball icon color
+    },
+    'Tennis': {
+      'icon': Icons.sports_tennis,
+      'color': Colors.blue, // Tennis icon color
+    },
+    'Cricket': {
+      'icon': Icons.sports_baseball, // Substitute for cricket
+      'color': Colors.brown, // Cricket icon color
+    },
+  };

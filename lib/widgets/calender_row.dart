@@ -1,13 +1,15 @@
-
-import 'package:allwin/controller/auth_controller.dart';
+import 'package:allwin/controller/calender_controller.dart';
 import 'package:allwin/widgets/slider_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 
 class CalenderRow extends StatelessWidget {
+  final RxString dateClciked;
   const CalenderRow({
     super.key,
     required Calender authController,
+    required this.dateClciked,
   }) : _authController = authController;
 
   final Calender _authController;
@@ -16,7 +18,7 @@ class CalenderRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const SliderCalender(),
+        SliderCalender(dateClicked: dateClciked),
         GestureDetector(
           onTap: () {
             _authController.showCalender(context);
@@ -36,5 +38,3 @@ class CalenderRow extends StatelessWidget {
     );
   }
 }
-
-

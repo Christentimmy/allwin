@@ -1,5 +1,7 @@
 import 'package:allwin/Resources/colors.dart';
+import 'package:allwin/controller/token_storage.dart';
 import 'package:allwin/pages/forgot_password.dart';
+import 'package:allwin/pages/login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,6 +13,30 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final _tokenStorageController = Get.put(TokenStorageController());
+  @override
+  void initState() {
+    _tokenStorageController.getToken();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx((){
+      if (_tokenStorageController.token.value.isEmpty) {
+        return LoginScreen();
+      }else{
+        return const YourDetails();
+      }
+    });
+  }
+}
+
+class YourDetails extends StatelessWidget {
+  const YourDetails({
+    super.key,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

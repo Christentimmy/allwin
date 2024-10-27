@@ -1,61 +1,45 @@
+import 'package:allwin/controller/all_request.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 class BookingCodeScreen extends StatefulWidget {
   const BookingCodeScreen({super.key});
 
   @override
-  _BookingCodeScreenState createState() => _BookingCodeScreenState();
+  State<BookingCodeScreen> createState() => _BookingCodeScreenState();
 }
 
 class _BookingCodeScreenState extends State<BookingCodeScreen> {
-  String _selectedSortOption = 'Date (Newest)';
+  final _allRequest = Get.put(AllRequestController());
+  @override
+  void initState() {
+    super.initState();
+    if (!_allRequest.isBookingLoaded.value) {
+      _allRequest.getBookingCodes();
+    }
+  }
 
-  // Sample booking data with "null" for processing results
-  List<Map<String, dynamic>> bookingData = [
-    {
-      "platform": "Betway",
-      "odd": 5.67,
-      "code": "2394834",
-      "result": "Win",
-      "date": DateTime.now()
-    },
-    {
-      "platform": "Bet9ja",
-      "odd": 3.50,
-      "code": "2392934",
-      "result": "Loss",
-      "date": DateTime.now().subtract(const Duration(days: 1))
-    },
-    {
-      "platform": "BetKing",
-      "odd": 7.12,
-      "code": "1294834",
-      "result": null,
-      "date": DateTime.now().subtract(const Duration(days: 2))
-    }, // Processing
-    {
-      "platform": "1xBet",
-      "odd": 4.20,
-      "code": "4394834",
-      "result": null,
-      "date": DateTime.now().subtract(const Duration(days: 3))
-    }, // Processing
-  ];
+  String _selectedSortOption = 'Date (Newest)';
 
   // Sorting logic
   void _sortBookingData() {
     setState(() {
       if (_selectedSortOption == 'Date (Newest)') {
-        bookingData.sort((a, b) => b['date'].compareTo(a['date']));
+        _allRequest.bookingCodeList
+            .sort((a, b) => b.startDate.compareTo(a.startDate));
       } else if (_selectedSortOption == 'Date (Oldest)') {
-        bookingData.sort((a, b) => a['date'].compareTo(b['date']));
+        _allRequest.bookingCodeList
+            .sort((a, b) => a.startDate.compareTo(b.startDate));
       } else if (_selectedSortOption == 'Total Odd (Highest)') {
-        bookingData.sort((a, b) => b['odd'].compareTo(a['odd']));
+        _allRequest.bookingCodeList
+            .sort((a, b) => b.totalOdd.compareTo(a.totalOdd));
       } else if (_selectedSortOption == 'Total Odd (Lowest)') {
-        bookingData.sort((a, b) => a['odd'].compareTo(b['odd']));
+        _allRequest.bookingCodeList
+            .sort((a, b) => a.startDate.compareTo(b.startDate));
       } else if (_selectedSortOption == 'Result (Win)') {
-        bookingData.sort((a, b) => a['result'].compareTo(b['result']));
+        _allRequest.bookingCodeList
+            .sort((a, b) => a.result.compareTo(b.result));
       }
     });
   }
@@ -87,7 +71,9 @@ class _BookingCodeScreenState extends State<BookingCodeScreen> {
                   const Text(
                     "Sort By:",
                     style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   DropdownButton<String>(
                     dropdownColor: const Color(0xff161F2C),
@@ -104,8 +90,10 @@ class _BookingCodeScreenState extends State<BookingCodeScreen> {
                     ].map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value,
-                            style: const TextStyle(color: Colors.white)),
+                        child: Text(
+                          value,
+                          style: const TextStyle(color: Colors.white),
+                        ),
                       );
                     }).toList(),
                     onChanged: (value) {
@@ -168,99 +156,129 @@ class _BookingCodeScreenState extends State<BookingCodeScreen> {
               ),
             ),
             const Divider(color: Colors.white),
-            Expanded(
-              child: ListView.builder(
-                itemCount: bookingData.length,
-                itemBuilder: (context, index) {
-                  final booking = bookingData[index];
-                  return Container(
-                    height: 50,
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    decoration: BoxDecoration(
-                      color: const Color(0xff161F2C),
-                      borderRadius: BorderRadius.circular(10),
+            Obx(() {
+              if (_allRequest.isBookingLoading.value) {
+                return const Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
                     ),
-                    margin: const EdgeInsets.all(10),
-                    child: Row(
-                      children: [
-                        // Betting Platform
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            booking["platform"],
-                            style: const TextStyle(color: Colors.white),
-                          ),
+                  ),
+                );
+              } else if (_allRequest.bookingCodeList.isEmpty) {
+                return const Expanded(
+                  child: Text(
+                    "No Booking Available",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                );
+              } else {
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: _allRequest.bookingCodeList.length,
+                    itemBuilder: (context, index) {
+                      final booking = _allRequest.bookingCodeList[index];
+                      return Container(
+                        height: 50,
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        decoration: BoxDecoration(
+                          color: const Color(0xff161F2C),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        // Total Odd
-                        Expanded(
-                          flex: 1,
-                          child: Text(
-                            booking["odd"].toString(),
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        // Booking Code
-                        Expanded(
-                          flex: 2,
-                          child: Row(
-                            children: [
-                              Text(
-                                booking["code"],
+                        margin: const EdgeInsets.all(10),
+                        child: Row(
+                          children: [
+                            // Betting Platform
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                booking.platform,
                                 style: const TextStyle(color: Colors.white),
                               ),
-                              IconButton(
-                                onPressed: () {
-                                  Clipboard.setData(
-                                    ClipboardData(text: booking["code"]),
-                                  );
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text("Booking code copied!"),
-                                      duration: Duration(seconds: 2),
-                                    ),
-                                  );
-                                },
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 0),
-                                icon:
-                                    const Icon(Icons.copy, color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Result Badge (Win/Loss/Processing)
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 4, horizontal: 8),
-                            decoration: BoxDecoration(
-                              color: booking["result"] == "Win"
-                                  ? Colors.green
-                                  : booking["result"] == "Loss"
-                                      ? Colors.red
-                                      : Colors.orange, // Processing color
-                              borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Text(
-                              booking["result"] ?? "loading",
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                            // Total Odd
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                booking.totalOdd,
+                                style: const TextStyle(color: Colors.white),
                               ),
                             ),
-                          ),
+                            // Booking Code
+                            Expanded(
+                              flex: 2,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    booking.bookingCode,
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      Clipboard.setData(
+                                        ClipboardData(
+                                            text: booking.bookingCode),
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text("Booking code copied!"),
+                                          duration: Duration(seconds: 2),
+                                        ),
+                                      );
+                                    },
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 0),
+                                    icon: const Icon(Icons.copy,
+                                        color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            // Result Badge (Win/Loss/Processing)
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 4,
+                                  horizontal: 8,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: resultColor[booking.result],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  booking.result.isEmpty
+                                      ? "Progress"
+                                      : booking.result,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
+                      );
+                    },
+                  ),
+                );
+              }
+            }),
           ],
         ),
       ),
     );
   }
 }
+
+const Map<String, Color> resultColor = {
+  "win": Colors.green,
+  "loss": Colors.red,
+  "": Colors.orange,
+};

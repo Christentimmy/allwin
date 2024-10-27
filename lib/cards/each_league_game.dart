@@ -1,55 +1,33 @@
+import 'package:allwin/model/get_matches_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class EachLeagueGameCard extends StatelessWidget {
-  final String homeTeamTitle;
-  final String awayTeamTitle;
-<<<<<<< Updated upstream
-  final List<String> prediction;
-  final String homeTeamClubImage;
-  final String awayTeamClubImage;
-  final String gameTime;
-  final bool isExpanded; // Track if this card is expanded
-  final VoidCallback onTap; // Callback for tap events
-  final String status; // New parameter for win/loss status
-
-=======
-  final String prediction;
-  final String homeTeamClubmImage;
-  final String awayTeamClubImage;
-  final String gameTime;
->>>>>>> Stashed changes
+  final MatchModel match;
   const EachLeagueGameCard({
     super.key,
-    required this.homeTeamTitle,
-    required this.awayTeamTitle,
-    required this.prediction,
-    required this.homeTeamClubImage,
-    required this.awayTeamClubImage,
-    required this.gameTime,
-<<<<<<< Updated upstream
-    required this.isExpanded,
-    required this.onTap,
-    required this.status, // Initialize the status
-=======
->>>>>>> Stashed changes
+    required this.match,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Determine the icon based on the status
-    IconData statusIcon;
-    Color iconColor;
+    String imageBasePrefix = "https://allwinxpredictions.com/uploads/teams/";
+    DateTime parsedTime = DateFormat("HH:mm:ss").parse(match.time);
+    String formattedTime = DateFormat("HH:mm").format(parsedTime);
+    // String dateTime = DateFormat("HH:mm").format(DateTime.parse(match.date));
+    // IconData statusIcon;
+    // Color iconColor;
 
-    if (status == "win") {
-      statusIcon = Icons.check_circle; // Icon for win
-      iconColor = Colors.green; // Green color for win
-    } else if (status == "loss") {
-      statusIcon = Icons.cancel; // Icon for loss
-      iconColor = Colors.red; // Red color for loss
-    } else {
-      statusIcon = Icons.help; // Default icon if status is not set
-      iconColor = Colors.grey; // Default color
-    }
+    // if (status == "win") {
+    //   statusIcon = Icons.check_circle;
+    //   iconColor = Colors.green;
+    // } else if (status == "loss") {
+    //   statusIcon = Icons.cancel;
+    //   iconColor = Colors.red;
+    // } else {
+    //   statusIcon = Icons.help;
+    //   iconColor = Colors.grey;
+    // }
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -57,118 +35,102 @@ class EachLeagueGameCard extends StatelessWidget {
         color: const Color.fromARGB(255, 37, 42, 58),
         borderRadius: BorderRadius.circular(15),
       ),
-      child: GestureDetector(
-        onTap: onTap, // Trigger the onTap when the card is tapped
-        child: ExpansionTile(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    homeTeamTitle,
-                    style: const TextStyle(
-                      color: Colors.white60,
-                      fontSize: 13,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    awayTeamTitle,
-                    style: const TextStyle(
-                      color: Colors.white60,
-                      fontSize: 13,
-                    ),
-                  ),
-                ],
-              ),
-              Text(
-                gameTime,
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-          leading: Icon(
-            statusIcon,
-            color: iconColor,
-            size: 24,
-          ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                "View",
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-<<<<<<< Updated upstream
-              const SizedBox(width: 4),
-              const Icon(
-                Icons.expand_more,
-                color: Colors.white,
-              ),
-            ],
-          ),
-          children: isExpanded
-              ? [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 15),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 48, 52, 72),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: prediction.map((pred) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Text(
-                            pred,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ]
-              : [],
-          onExpansionChanged: (isExpanded) {
-            // Handle expansion change
-            if (isExpanded) {
-              onTap(); // Call the tap callback when expanded
-            }
-          },
-=======
-              const SizedBox(height: 6),
-              Text(
-                awayTeamTitle,
-                style: const TextStyle(
-                  color: Colors.white60,
-                  fontSize: 13,
-                ),
-              ),
-            ],
+      child: ListTile(
+        horizontalTitleGap: 8,
+        leading: Text(
+          formattedTime,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 13,
           ),
         ),
-        trailing: Padding(
-          padding: const EdgeInsets.only(right: 5),
-          child: Text(
-            prediction,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 13,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: FadeInImage(
+                    placeholder:
+                        const AssetImage("assets/image/placeholder.png"),
+                    image: NetworkImage("$imageBasePrefix${match.homeTeamImg}"),
+                    width: 20,
+                    height: 20,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 7),
+                Text(
+                  match.homeTeam,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
             ),
-          ),
->>>>>>> Stashed changes
+            const SizedBox(height: 5),
+            Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: FadeInImage(
+                    placeholder:
+                        const AssetImage("assets/image/placeholder.png"),
+                    image: NetworkImage("$imageBasePrefix${match.awayTeamImg}"),
+                    width: 20,
+                    height: 20,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 7),
+                Text(
+                  match.awayTeam,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
+        trailing: match.predictions.length == 1
+            ? Text(
+                match.predictions.join(", "),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                ),
+              )
+            : SizedBox(
+                width: 70,
+                height: 55,
+                // color: Colors.red,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      match.predictions[0],
+                      style: const TextStyle(color: Colors.white, fontSize: 12),
+                    ),
+                    PopupMenuButton(
+                      
+                      child: const Icon(
+                        Icons.keyboard_arrow_down_outlined,
+                        color: Colors.white,
+                        size: 25,
+                      ),
+                      itemBuilder: (context) {
+                        return match.predictions.map((String predictions) {
+                          return PopupMenuItem(child: Text(predictions));
+                        }).toList();
+                      },
+                    ),
+                  ],
+                ),
+              ),
       ),
     );
   }

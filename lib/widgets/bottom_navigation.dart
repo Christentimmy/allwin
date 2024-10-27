@@ -48,13 +48,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
             color: Colors.white,
             backgroundColor: const Color(0xff161F2C),
             tabs: const [
-              GButton(icon: Icons.dashboard, text: "Home"), // Updated Home icon
-              GButton(
-                  icon: Icons.confirmation_number,
-                  text: "Booking Code"), // Updated Booking Code icon
-              GButton(
-                  icon: Icons.account_circle,
-                  text: "Account"), // Updated Profile icon
+              GButton(icon: Icons.dashboard, text: "Home"),
+              GButton(icon: Icons.confirmation_number, text: "Booking Code"),
+              GButton(icon: Icons.account_circle, text: "Account"),
             ],
             padding: const EdgeInsets.all(10.0),
           ),

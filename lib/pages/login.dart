@@ -1,17 +1,23 @@
-import 'package:allwin/pages/sign_up.dart';
-import 'package:allwin/widgets/bottom_navigation.dart';
+import 'package:allwin/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../Resources/colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class LoginScreen extends StatelessWidget {
+  LoginScreen({super.key});
 
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passowordController = TextEditingController();
+  final _authController = Get.put(AuthController());
 
-class _LoginScreenState extends State<LoginScreen> {
+  // void loginUser() async {
+  //   await _authController.login(
+  //     email: _emailController.text.trim(),
+  //     password: _passowordController.text,
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,6 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: TextFormField(
+                      controller: _emailController,
                       decoration: const InputDecoration(
                         hintText: "Email",
                         prefixIcon: Icon(Icons.person),
@@ -91,8 +98,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: TextFormField(
+                      controller: _passowordController,
                       decoration: const InputDecoration(
-                        labelText: "Password",
+                        hintText: "Password",
                         prefixIcon: Icon(Icons.lock),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide.none,
@@ -118,29 +126,40 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   const SizedBox(height: 25),
-                  GestureDetector(
-                    onTap: () => Get.to(() => const BottomNavigation()),
-                    child: Container(
-                      width: double.infinity,
-                      height: 50,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: AppColors.secondaryColor,
-                          boxShadow: const [
-                            BoxShadow(
-                              offset: Offset(0, 2),
-                              color: Color.fromARGB(103, 255, 102, 0),
-                              blurRadius: 5,
-                              spreadRadius: 2,
-                            )
-                          ]),
-                      child: const Text(
-                        "Login",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                        ),
+                  Obx(
+                    () => GestureDetector(
+                      onTap: () async {
+                        await _authController.login(
+                          email: _emailController.text.trim(),
+                          password: _passowordController.text,
+                        );
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        height: 50,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: AppColors.secondaryColor,
+                            boxShadow: const [
+                              BoxShadow(
+                                offset: Offset(0, 2),
+                                color: Color.fromARGB(103, 255, 102, 0),
+                                blurRadius: 5,
+                                spreadRadius: 2,
+                              )
+                            ]),
+                        child: _authController.isloading.value
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : const Text(
+                                "Login",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                ),
+                              ),
                       ),
                     ),
                   ),
@@ -153,9 +172,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(color: Colors.white),
                       ),
                       GestureDetector(
-                        onTap: () => Get.to(() => const SignUpScreen()),
+                        onTap: () async {
+                          const url = 'https://allwinxpredictions.com/register';
+                          if (await canLaunchUrl(Uri.parse(url))) {
+                            await launchUrl(Uri.parse(url));
+                          } else {
+                            throw 'Could not launch $url';
+                          }
+                        },
                         child: const Text(
-                          "Sign Up",
+                          "Sign Up ",
                           style: TextStyle(
                             color: Colors.white,
                           ),

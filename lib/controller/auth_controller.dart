@@ -1,26 +1,64 @@
-import 'package:calendar_date_picker2/calendar_date_picker2.dart';
+import 'dart:convert';
+import 'package:allwin/controller/token_storage.dart';
+import 'package:allwin/widgets/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
-class Calender extends GetxController {
-  showCalender(BuildContext context) {
-    showCalendarDatePicker2Dialog(
-      context: context,
-      config: CalendarDatePicker2WithActionButtonsConfig(),
-      dialogSize: const Size(305, 370),
-      dialogBackgroundColor: const Color(0xff283968),
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.dark().copyWith(
-            primaryColor: Colors.white,
-            dialogBackgroundColor: const Color(0xff283968),
-            // colorScheme: ColorScheme(
-            //   background: const Color(0xff283968),
-            // ),
+class AuthController extends GetxController {
+  String baseUrl = "https://allwinxpredictions.com";
+  RxBool isloading = false.obs;
+  final _tokenStorageController = Get.find<TokenStorageController>();
+
+  Future<void> login({
+    required String email,
+    required String password,
+  }) async {
+    isloading.value = true;
+    try {
+      final response = await http.post(
+          Uri.parse(
+            "$baseUrl/api/login",
           ),
-          child: child!,
-        );
-      },
-    );
+          body: {
+            "email": email,
+            "password": password,
+          });
+      final responseBody = json.decode(response.body);
+      if (responseBody["status"] == true) {
+        String newToken = responseBody["responseBody"]["token"];
+        _tokenStorageController.saveToken(newToken);
+        Get.offAll(() => const BottomNavigation());
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
+  }
+
+  Future<void> signUp({
+    required String email,
+    required String password,
+  }) async {
+    isloading.value = true;
+    try {
+      final response = await http.post(
+        Uri.parse("$baseUrl/api/login"),
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: {
+          "email": email,
+          "password": password,
+        },
+      );
+
+      if (response.statusCode == 200) {}
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
   }
 }
