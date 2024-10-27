@@ -37,7 +37,7 @@ class AllRequestController extends GetxController {
   }
 
   void processMatchesByDate(List<dynamic> games) {
-    allMatchesByDate.clear(); // Clear previous data
+    allMatchesByDate.clear(); 
     for (var leagueData in games) {
       String leagueDetails = leagueData["league_details"];
       int leagueId = leagueData["league_id"];
@@ -60,19 +60,16 @@ class AllRequestController extends GetxController {
           availablePackages: matchData["available_packages"],
         );
 
-        // Check if the date already has a league entry
+
         if (allMatchesByDate.containsKey(date)) {
-          // Find if the league already exists for this date
           var leaguesForDate = allMatchesByDate[date]!;
           League? existingLeague = leaguesForDate.firstWhereOrNull(
             (league) => league.leagueId == leagueId,
           );
 
           if (existingLeague != null) {
-            // Add match to existing league for this date
             existingLeague.matches.add(match);
           } else {
-            // Create new league for this date and add it
             leaguesForDate.add(
               League(
                 leagueDetails: leagueDetails,
@@ -82,7 +79,6 @@ class AllRequestController extends GetxController {
             );
           }
         } else {
-          // Create a new entry for this date with the current league and match
           allMatchesByDate[date] = [
             League(
               leagueDetails: leagueDetails,
