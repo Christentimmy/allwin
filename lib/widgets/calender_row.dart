@@ -6,13 +6,12 @@ import 'package:get/get.dart';
 
 class CalenderRow extends StatelessWidget {
   final RxString dateClciked;
+  final Calender calenderController;
   const CalenderRow({
     super.key,
-    required Calender authController,
     required this.dateClciked,
-  }) : _authController = authController;
-
-  final Calender _authController;
+    required this.calenderController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,7 @@ class CalenderRow extends StatelessWidget {
         SliderCalender(dateClicked: dateClciked),
         GestureDetector(
           onTap: () {
-            _authController.showCalender(context);
+            calenderController.showCalender(context);
           },
           child: Container(
             padding: const EdgeInsets.only(top: 10, left: 10),

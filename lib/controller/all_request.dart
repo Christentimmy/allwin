@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:allwin/model/booking_model.dart';
-import 'package:allwin/model/get_matches_model.dart';
+import 'package:allwin/model/matches_model.dart';
+import 'package:allwin/model/sport_category_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -10,10 +11,12 @@ class AllRequestController extends GetxController {
   var isBookingLoading = false.obs;
   var isMatchesLoaded = false.obs;
   var isBookingLoaded = false.obs;
+  RxBool isSportCategoryLoaded = false.obs;
   var allMatchesList = [].obs;
   var allMatchesByDate = <String, List<League>>{}.obs;
   String baseUrl = "https://allwinxpredictions.com";
   RxList<BookingModel> bookingCodeList = <BookingModel>[].obs;
+  RxList<SportCategoryModel> sportCategoryModelList = <SportCategoryModel>[].obs;
 
   Future<void> getLeagueMatch() async {
     isloading.value = true;
@@ -37,7 +40,7 @@ class AllRequestController extends GetxController {
   }
 
   void processMatchesByDate(List<dynamic> games) {
-    allMatchesByDate.clear(); 
+    allMatchesByDate.clear();
     for (var leagueData in games) {
       String leagueDetails = leagueData["league_details"];
       int leagueId = leagueData["league_id"];
@@ -59,7 +62,6 @@ class AllRequestController extends GetxController {
           time: matchData["time"],
           availablePackages: matchData["available_packages"],
         );
-
 
         if (allMatchesByDate.containsKey(date)) {
           var leaguesForDate = allMatchesByDate[date]!;
@@ -114,6 +116,35 @@ class AllRequestController extends GetxController {
       debugPrint(e.toString());
     } finally {
       isBookingLoading.value = false;
+    }
+  }
+
+  Future<void> getSportCategory() async {
+    isloading.value = true;
+    try {
+      final response = await http.get(
+        Uri.parse("$baseUrl/api/get-sport-category"),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      final decodedResponse = json.decode(response.body);
+      if (decodedResponse["status"] != true) {
+        Get.snackbar("Error", decodedResponse["responseMessage"]);
+        return;
+      } else {
+        List allSports = decodedResponse["responseBody"];
+        List<SportCategoryModel> neededMap = allSports
+            .map((element) => SportCategoryModel.fromJson(element))
+            .toList();
+        sportCategoryModelList.value = neededMap;
+        isSportCategoryLoaded.value = true;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
     }
   }
 }

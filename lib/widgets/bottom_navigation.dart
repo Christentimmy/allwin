@@ -51,6 +51,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               GButton(icon: Icons.dashboard, text: "Home"),
               GButton(icon: Icons.confirmation_number, text: "Booking Code"),
               GButton(icon: Icons.account_circle, text: "Account"),
+              // GButton(icon: Icons.refresh, text: "Refresh"),
             ],
             padding: const EdgeInsets.all(10.0),
           ),

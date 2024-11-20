@@ -2,9 +2,10 @@ import 'package:allwin/cards/each_league_game.dart';
 import 'package:allwin/cards/league_header_card.dart';
 import 'package:allwin/controller/all_request.dart';
 import 'package:allwin/json/all.dart';
-import 'package:allwin/model/get_matches_model.dart';
+import 'package:allwin/model/matches_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 class ShowMatches extends StatefulWidget {
   final RxString dateClciked;
@@ -71,14 +72,20 @@ class _ShowMatchesState extends State<ShowMatches> {
           ),
         );
       } else {
-        return const Expanded(
-          child: Center(
-            child: Text(
-              "No matches available for the selected date.",
-              style: TextStyle(
-                color: Colors.white,
+        return Expanded(
+          child: Column(
+            children: [
+              SizedBox(height: Get.height * 0.1),
+              Lottie.asset("assets/image/empty2.json", height: 200),
+              const Center(
+                child: Text(
+                  "No matches available for the selected date.",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         );
       }

@@ -27,6 +27,7 @@ class SliderCalender extends StatelessWidget {
             onTap: () {
               dateClicked.value = DateFormat("yyyy-MM-dd").format(currentDay);
               _currentIndex.value = index;
+              print(dateClicked);
             },
             child: Obx(
               () => Container(

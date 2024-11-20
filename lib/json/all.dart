@@ -21963,18 +21963,18 @@ const Map<String, String> leagueImages = {
 final Map<String, Map<String, dynamic>> sportsWithIcons = {
     'Football': {
       'icon': Icons.sports_football,
-      'color': Colors.green, // Football icon color
+      'color': Colors.green, 
     },
     'Basketball': {
       'icon': Icons.sports_basketball,
-      'color': Colors.orange, // Basketball icon color
+      'color': Colors.orange, 
     },
     'Tennis': {
       'icon': Icons.sports_tennis,
-      'color': Colors.blue, // Tennis icon color
+      'color': Colors.blue, 
     },
     'Cricket': {
-      'icon': Icons.sports_baseball, // Substitute for cricket
-      'color': Colors.brown, // Cricket icon color
+      'icon': Icons.sports_baseball, 
+      'color': Colors.brown, 
     },
   };

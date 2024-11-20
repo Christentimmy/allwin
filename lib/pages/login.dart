@@ -10,6 +10,7 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passowordController = TextEditingController();
   final _authController = Get.put(AuthController());
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // void loginUser() async {
   //   await _authController.login(
@@ -68,47 +69,108 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 50),
-                  Container(
-                    width: double.infinity,
-                    height: 55,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 252, 252, 252),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: TextFormField(
-                      controller: _emailController,
-                      decoration: const InputDecoration(
-                        hintText: "Email",
-                        prefixIcon: Icon(Icons.person),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none,
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Field Required";
+                            }
+                            if (!value.contains("@")) {
+                              return "Invalid Email";
+                            }
+                            return null;
+                          },
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                            hintText: "Email",
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                            ),
+                            prefixIcon: const Icon(
+                              Icons.person,
+                              color: Colors.white,
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: const BorderSide(
+                                color: Colors.grey,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: const BorderSide(
+                                color: AppColors.secondaryColor,
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: const BorderSide(
+                                color: Colors.red,
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: const BorderSide(
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none,
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                          controller: _passowordController,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Field Required";
+                            }
+
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                            ),
+                            hintText: "Password",
+                            prefixIcon: Icon(
+                              Icons.lock,
+                              color: Colors.white,
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: const BorderSide(
+                                color: Colors.grey,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: const BorderSide(
+                                color: AppColors.secondaryColor,
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: const BorderSide(
+                                color: Colors.red,
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: const BorderSide(
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Container(
-                    width: double.infinity,
-                    height: 55,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 252, 252, 252),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: TextFormField(
-                      controller: _passowordController,
-                      decoration: const InputDecoration(
-                        hintText: "Password",
-                        prefixIcon: Icon(Icons.lock),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
+                      ],
                     ),
                   ),
                   const Row(
@@ -129,26 +191,30 @@ class LoginScreen extends StatelessWidget {
                   Obx(
                     () => GestureDetector(
                       onTap: () async {
-                        await _authController.login(
-                          email: _emailController.text.trim(),
-                          password: _passowordController.text,
-                        );
+                        if (_formKey.currentState!.validate()) {
+                          await _authController.login(
+                            email: _emailController.text.trim(),
+                            password: _passowordController.text,
+                            context: context,
+                          );
+                        }
                       },
                       child: Container(
                         width: double.infinity,
                         height: 50,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: AppColors.secondaryColor,
-                            boxShadow: const [
-                              BoxShadow(
-                                offset: Offset(0, 2),
-                                color: Color.fromARGB(103, 255, 102, 0),
-                                blurRadius: 5,
-                                spreadRadius: 2,
-                              )
-                            ]),
+                          borderRadius: BorderRadius.circular(20),
+                          color: AppColors.secondaryColor,
+                          boxShadow: const [
+                            BoxShadow(
+                              offset: Offset(0, 2),
+                              color: Color.fromARGB(103, 255, 102, 0),
+                              blurRadius: 5,
+                              spreadRadius: 2,
+                            )
+                          ],
+                        ),
                         child: _authController.isloading.value
                             ? const CircularProgressIndicator(
                                 color: Colors.white,
@@ -183,7 +249,9 @@ class LoginScreen extends StatelessWidget {
                         child: const Text(
                           "Sign Up ",
                           style: TextStyle(
-                            color: Colors.white,
+                            color: AppColors.secondaryColor,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),

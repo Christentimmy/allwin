@@ -1,4 +1,6 @@
 import 'package:allwin/Resources/colors.dart';
+import 'package:allwin/controller/auth_controller.dart';
+import 'package:allwin/controller/retrieve_controller.dart';
 import 'package:allwin/controller/token_storage.dart';
 import 'package:allwin/pages/forgot_password.dart';
 import 'package:allwin/pages/login.dart';
@@ -14,28 +16,33 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final _tokenStorageController = Get.put(TokenStorageController());
+  final _retrieveController = Get.put(RetrieveController());
   @override
   void initState() {
     _tokenStorageController.getToken();
+    _retrieveController.getUserDetails();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Obx((){
+    return Obx(() {
       if (_tokenStorageController.token.value.isEmpty) {
         return LoginScreen();
-      }else{
-        return const YourDetails();
+      } else {
+        return YourDetails();
       }
     });
   }
 }
 
 class YourDetails extends StatelessWidget {
-  const YourDetails({
+  YourDetails({
     super.key,
   });
+
+  final _authController = Get.put(AuthController());
+  final _retrieveController = Get.put(RetrieveController());
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +65,8 @@ class YourDetails extends StatelessWidget {
             color: AppColors.primaryColor,
             iconColor: Colors.white,
             itemBuilder: (context) => [
-               PopupMenuItem(
-                onTap: () => Get.to(()=> const  ForgotPassword()),
+              PopupMenuItem(
+                onTap: () => Get.to(() => const ForgotPassword()),
                 child: const Row(
                   children: [
                     Text(
@@ -155,79 +162,102 @@ class YourDetails extends StatelessWidget {
               ),
               Container(
                 width: double.infinity,
-                height: 250,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                height: Get.height * 0.323,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Column(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           "First Name",
                           style: TextStyle(
                             color: Colors.white70,
                             fontSize: 18,
                           ),
                         ),
-                        Text(
-                          "null",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
+                        Obx(
+                          () => Text(
+                            _retrieveController.userDetails.value?.name ?? "",
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 18,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    Divider(),
-                    SizedBox(height: 20),
+                    const Divider(),
+                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          "Surname Name",
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 18,
-                          ),
-                        ),
-                        Text(
-                          "null",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Divider(),
-                    SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
+                        const Text(
                           "Email",
                           style: TextStyle(
                             color: Colors.white70,
                             fontSize: 18,
                           ),
                         ),
-                        Text(
-                          "null",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
+                        Obx(
+                          () => Text(
+                            _retrieveController.userDetails.value?.email ?? "",
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 18,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    Divider(),
+                    const Divider(),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Status",
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 18,
+                          ),
+                        ),
+                        Obx(
+                          () => Text(
+                            _retrieveController.userDetails.value?.status ?? "",
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Divider(),
                   ],
+                ),
+              ),
+              ListTile(
+                onTap: () async {
+                  await _authController.logout();
+                },
+                leading: const Icon(
+                  Icons.logout,
+                  color: Colors.red,
+                ),
+                title: const Text(
+                  "Logout",
+                  style: TextStyle(
+                    color: Colors.red,
+                  ),
                 ),
               ),
             ],

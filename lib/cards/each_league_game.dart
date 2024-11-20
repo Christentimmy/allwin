@@ -1,4 +1,4 @@
-import 'package:allwin/model/get_matches_model.dart';
+import 'package:allwin/model/matches_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

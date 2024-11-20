@@ -1,15 +1,32 @@
-import 'package:allwin/json/all.dart';
+import 'package:allwin/controller/all_request.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 
 class UpperWidgetHomeScreen extends StatefulWidget {
-  const UpperWidgetHomeScreen({super.key});
+  final PageController pageController;
+  const UpperWidgetHomeScreen({
+    super.key,
+    required this.pageController,
+  });
 
   @override
   State<UpperWidgetHomeScreen> createState() => _UpperWidgetHomeScreenState();
 }
 
 class _UpperWidgetHomeScreenState extends State<UpperWidgetHomeScreen> {
-  String selectedSport = 'Football';
+  final _allRequestController = Get.put(AllRequestController());
+
+  @override
+  void initState() {
+    super.initState();
+    if (!_allRequestController.isSportCategoryLoaded.value) {
+      _allRequestController.getSportCategory();
+    }
+  }
+
+  RxString selectedSport = 'Football'.obs;
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -36,41 +53,49 @@ class _UpperWidgetHomeScreenState extends State<UpperWidgetHomeScreen> {
                   ),
                 ],
               ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: selectedSport,
-                  dropdownColor:
-                      const Color.fromARGB(255, 48, 52, 72).withOpacity(0.9),
-                  items: sportsWithIcons.entries.map((entry) {
-                    return DropdownMenuItem<String>(
-                      value: entry.key,
-                      child: Row(
-                        children: [
-                          Icon(
-                            entry.value['icon'],
-                            color: entry.value['color'],
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            entry.key,
-                            style: const TextStyle(
-                              color: Colors.white,
+              child: Obx(
+                () => DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: selectedSport.value,
+                    dropdownColor:
+                        const Color.fromARGB(255, 48, 52, 72).withOpacity(0.9),
+                    items: _allRequestController.sportCategoryModelList
+                        .map((entry) {
+                      return DropdownMenuItem<String>(
+                        value: entry.name,
+                        child: Row(
+                          children: [
+                            Icon(
+                              sportIcons[entry.name]?[0],
+                              color: sportIcons[entry.name]?[1],
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedSport = newValue!;
-                    });
-                  },
-                  icon: const Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.white,
+                            const SizedBox(width: 8),
+                            Text(
+                              entry.name,
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      selectedSport.value = newValue!;
+                      widget.pageController.animateToPage(
+                        sportWithIndex[selectedSport.value] ?? 0,
+                        duration: const Duration(microseconds: 100),
+                        curve: Curves.ease,
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.white,
+                    ),
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
-                  style: const TextStyle(color: Colors.white),
                 ),
               ),
             ),
@@ -79,4 +104,40 @@ class _UpperWidgetHomeScreenState extends State<UpperWidgetHomeScreen> {
       ],
     );
   }
+
+  Map<String, int> sportWithIndex = {
+    "Football": 0,
+    "Basketball": 1,
+    "Tennis": 2,
+    "Cricket": 3,
+    "HandBall" : 4,
+    "Ice Hockey": 5,
+  };
+
+  Map<String, List> sportIcons = {
+    "Football": [
+      FontAwesomeIcons.futbol,
+      Colors.blue,
+    ],
+    "BasketBall": [
+      Icons.sports_basketball,
+      Colors.lightGreen,
+    ],
+    "Tennis": [
+      Icons.sports_tennis,
+      Colors.pinkAccent,
+    ],
+    "Cricket": [
+      Icons.sports_baseball,
+      Colors.purpleAccent,
+    ],
+    "HandBall": [
+      FontAwesomeIcons.baseball,
+      Colors.cyanAccent,
+    ],
+    "Ice Hockey": [
+      FontAwesomeIcons.hockeyPuck,
+      Colors.lime,
+    ],
+  };
 }

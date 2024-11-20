@@ -219,7 +219,8 @@ class _BookingCodeScreenState extends State<BookingCodeScreen> {
                                     onPressed: () {
                                       Clipboard.setData(
                                         ClipboardData(
-                                            text: booking.bookingCode),
+                                          text: booking.bookingCode,
+                                        ),
                                       );
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
@@ -230,9 +231,12 @@ class _BookingCodeScreenState extends State<BookingCodeScreen> {
                                       );
                                     },
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 0),
-                                    icon: const Icon(Icons.copy,
-                                        color: Colors.grey),
+                                      horizontal: 0,
+                                    ),
+                                    icon: const Icon(
+                                      Icons.copy,
+                                      color: Colors.grey,
+                                    ),
                                   ),
                                 ],
                               ),
