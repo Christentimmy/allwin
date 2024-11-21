@@ -2,6 +2,7 @@ import 'package:allwin/controller/all_request.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
 
 class UpperWidgetHomeScreen extends StatefulWidget {
   final PageController pageController;
@@ -16,6 +17,7 @@ class UpperWidgetHomeScreen extends StatefulWidget {
 
 class _UpperWidgetHomeScreenState extends State<UpperWidgetHomeScreen> {
   final _allRequestController = Get.put(AllRequestController());
+  RxInt _selectedIndex = 0.obs;
 
   @override
   void initState() {
@@ -80,14 +82,19 @@ class _UpperWidgetHomeScreenState extends State<UpperWidgetHomeScreen> {
                         ),
                       );
                     }).toList(),
-                    onChanged: (String? newValue) {
-                      selectedSport.value = newValue!;
-                      widget.pageController.animateToPage(
-                        sportWithIndex[selectedSport.value] ?? 0,
-                        duration: const Duration(microseconds: 100),
-                        curve: Curves.ease,
-                      );
+                    onChanged: (value) {
+                      selectedSport.value = value!;
+                      final index = _allRequestController.sportCategoryModelList
+                          .indexWhere(
+                              (entry) => entry.name == selectedSport.value);
+                      if (index != -1) {
+                        _selectedIndex.value = index;
+                        widget.pageController.jumpToPage(_selectedIndex.value);
+                      } else {
+                        print("Invalid index");
+                      }
                     },
+                     
                     icon: const Icon(
                       Icons.arrow_drop_down,
                       color: Colors.white,
@@ -105,14 +112,14 @@ class _UpperWidgetHomeScreenState extends State<UpperWidgetHomeScreen> {
     );
   }
 
-  Map<String, int> sportWithIndex = {
-    "Football": 0,
-    "Basketball": 1,
-    "Tennis": 2,
-    "Cricket": 3,
-    "HandBall" : 4,
-    "Ice Hockey": 5,
-  };
+  // Map<String, int> sportWithIndex = {
+  //   "Football": 0,
+  //   "Basketball": 1,
+  //   "Tennis": 2,
+  //   "Cricket": 3,
+  //   "HandBall" : 4,
+  //   "Ice Hockey": 5,
+  // };
 
   Map<String, List> sportIcons = {
     "Football": [

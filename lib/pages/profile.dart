@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:allwin/Resources/colors.dart';
 import 'package:allwin/controller/auth_controller.dart';
 import 'package:allwin/controller/retrieve_controller.dart';
@@ -163,100 +165,125 @@ class YourDetails extends StatelessWidget {
               Container(
                 width: double.infinity,
                 height: Get.height * 0.323,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 20,
-                ),
+                margin: const EdgeInsets.symmetric(horizontal: 15),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(20),
+                  image: const DecorationImage(
+                    image: AssetImage(
+                      "assets/image/blue.jpg",
+                    ),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Color.fromARGB(234, 0, 0, 0),
+                      BlendMode.darken,
+                    ),
+                  ),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "First Name",
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 18,
+                child: ClipRRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 20,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "First Name",
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              Obx(
+                                () => Text(
+                                  _retrieveController.userDetails.value?.name ??
+                                      "",
+                                  style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        Obx(
-                          () => Text(
-                            _retrieveController.userDetails.value?.name ?? "",
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 18,
-                            ),
+                          const Divider(),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "Email",
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              Obx(
+                                () => Text(
+                                  _retrieveController
+                                          .userDetails.value?.email ??
+                                      "",
+                                  style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
+                          const Divider(),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "Status",
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              Obx(
+                                () => Text(
+                                  _retrieveController
+                                          .userDetails.value?.status ??
+                                      "",
+                                  style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Divider(),
+                        ],
+                      ),
                     ),
-                    const Divider(),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Email",
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 18,
-                          ),
-                        ),
-                        Obx(
-                          () => Text(
-                            _retrieveController.userDetails.value?.email ?? "",
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Divider(),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Status",
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 18,
-                          ),
-                        ),
-                        Obx(
-                          () => Text(
-                            _retrieveController.userDetails.value?.status ?? "",
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Divider(),
-                  ],
+                  ),
                 ),
               ),
-              ListTile(
-                onTap: () async {
-                  await _authController.logout();
-                },
-                leading: const Icon(
-                  Icons.logout,
-                  color: Colors.red,
-                ),
-                title: const Text(
-                  "Logout",
-                  style: TextStyle(
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: ListTile(
+                  onTap: () async {
+                    await _authController.logout();
+                  },
+                  leading: const Icon(
+                    Icons.logout,
                     color: Colors.red,
+                  ),
+                  title: const Text(
+                    "Logout",
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
                   ),
                 ),
               ),

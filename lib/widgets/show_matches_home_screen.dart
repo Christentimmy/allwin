@@ -11,11 +11,9 @@ class ShowMatches extends StatefulWidget {
   final RxString dateClciked;
   const ShowMatches({
     super.key,
-    required this.currentWidth,
     required this.dateClciked,
   });
 
-  final double currentWidth;
 
   @override
   State<ShowMatches> createState() => _ShowMatchesState();

@@ -21958,6 +21958,18 @@ const Map<String, String> leagueImages = {
   "LaLiga": "assets/image/laliga.png",
   "Premier League": "assets/image/pl.jpg",
   "Championship": "assets/image/championship.png",
+  "NBA Regular Season League": "assets/images/nbareg.jpg",
+  "Euroleague: Regular season": "assets/images/euroleague.png",
+  "Lega Basket Serie A": "assets/images/lba.png",
+  "LNB Argentina": "assets/images/laligaArgen.png",
+  "NBB Brazil": "assets/images/nbb.png",
+  "LNB Pro A": "assets/images/lnbpro.png",
+  "Super League Turkiye": "assets/images/turkey.jpg",
+  "Liga ACB Spain": "assets/images/ligaacb.png",
+  "LKL Lithuania": "assets/images/lithlogo.png",
+  "BBL Germany": "assets/images/bbl.jpg",
+  "Super League Israel": "assets/images/isreal.jpg",
+  "CBA China": "assets/images/chinese.jpg",
 };
 
 final Map<String, Map<String, dynamic>> sportsWithIcons = {
