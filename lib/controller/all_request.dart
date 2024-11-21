@@ -32,14 +32,34 @@ class AllRequestController extends GetxController {
   var allBasketBallMatchesByDate = <String, List<League>>{}.obs;
   var isBasketBallMatchesLoaded = false.obs;
 
+  //Tennis Matches
+  var allTennisMatches = [].obs;
+  var allTennisMatchesByDate = <String, List<League>>{}.obs;
+  var isTennisMatchesLoaded = false.obs;
+
+  //Handball Matches
+  var allHandBallMatches = [].obs;
+  var allHandBallMatchesByDates = <String, List<League>>{}.obs;
+  var isHandBallMatchesLoaded = false.obs;
+
+  //Ice Hockey
+  var allIceHockeyMatches = [].obs;
+  var allIceHockeyMatchesByDates = <String, List<League>>{}.obs;
+  var isIceHockeyMatchesLoaded = false.obs;
+
   //base Url
   String baseUrl = "https://allwinxpredictions.com";
 
-  Future<void> getLeagueMatch() async {
+  Future<void> getDesiredMatch({
+    required var sportId,
+    required RxList<dynamic> games,
+    required RxMap<String, List<League>> processedMatchesByDate,
+    required bool isVarMatchLoaded,
+  }) async {
     isloading.value = true;
     try {
       final response = await http.get(
-        Uri.parse("$baseUrl/api/get-matches/2"),
+        Uri.parse("$baseUrl/api/get-matches/$sportId"),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -47,9 +67,12 @@ class AllRequestController extends GetxController {
       if (response.statusCode == 200) {
         var decode = json.decode(response.body);
         var responseBody = decode["responseBody"];
-        allMatchesList.value = responseBody;
-        await processMatchesByDate(allMatchesList, allMatchesByDate);
-        isMatchesLoaded.value = true;
+        games.value = responseBody;
+        await processMatchesByDate(
+          games: games,
+          processedMatchesByDate: processedMatchesByDate,
+        );
+        isVarMatchLoaded = true;
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -58,8 +81,10 @@ class AllRequestController extends GetxController {
     }
   }
 
-  Future<void> processMatchesByDate(List<dynamic> games,
-      RxMap<String, List<League>> processedMatchesByDate) async {
+  Future<void> processMatchesByDate({
+    required List<dynamic> games,
+    required RxMap<String, List<League>> processedMatchesByDate,
+  }) async {
     processedMatchesByDate.clear();
 
     for (var leagueData in games) {
@@ -171,7 +196,7 @@ class AllRequestController extends GetxController {
     }
   }
 
-  Future<void> getBasketBallGames({
+  Future<void> getBasketBallGame({
     required BuildContext context,
   }) async {
     isloading.value = true;
@@ -194,12 +219,12 @@ class AllRequestController extends GetxController {
         var decode = json.decode(response.body);
         var responseBody = decode["responseBody"];
         allBasketBallMatches.value = responseBody;
-        
-        processMatchesByDate(
-          allBasketBallMatches,
-          allBasketBallMatchesByDate,
+
+        await processMatchesByDate(
+          games: allBasketBallMatches,
+          processedMatchesByDate: allBasketBallMatchesByDate,
         );
-        
+
         isMatchesLoaded.value = true;
       }
     } catch (e) {
@@ -208,4 +233,76 @@ class AllRequestController extends GetxController {
       isloading.value = false;
     }
   }
+
+  Future<void> refreshAllGamesButton() async {
+    
+    await getDesiredMatch(
+      sportId: "2",
+      games: allMatchesList,
+      processedMatchesByDate: allMatchesByDate,
+      isVarMatchLoaded: isMatchesLoaded.value,
+    );
+
+    await getDesiredMatch(
+      sportId: "3",
+      games: allTennisMatches,
+      processedMatchesByDate: allTennisMatchesByDate,
+      isVarMatchLoaded: isTennisMatchesLoaded.value,
+    );
+
+    await getDesiredMatch(
+      sportId: "4",
+      games: allBasketBallMatches,
+      processedMatchesByDate: allBasketBallMatchesByDate,
+      isVarMatchLoaded: isBasketBallMatchesLoaded.value,
+    );
+
+    await getDesiredMatch(
+      sportId: "5",
+      games: allHandBallMatches,
+      processedMatchesByDate: allHandBallMatchesByDates,
+      isVarMatchLoaded: isHandBallMatchesLoaded.value,
+    );
+
+    await getDesiredMatch(
+      sportId: "6",
+      games: allIceHockeyMatches,
+      processedMatchesByDate: allIceHockeyMatchesByDates,
+      isVarMatchLoaded: isIceHockeyMatchesLoaded.value,
+    );
+
+    // await getDesiredMatch(
+    //   sportId: sportId,
+    //   games: games,
+    //   processedMatchesByDate: processedMatchesByDate,
+    //   isVarMatchLoaded: isVarMatchLoaded,
+    // );
+  }
 }
+
+// Future<void> getLeagueMatch() async {
+//   isloading.value = true;
+//   try {
+//     final response = await http.get(
+//       Uri.parse("$baseUrl/api/get-matches/2"),
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     );
+//     if (response.statusCode == 200) {
+//       var decode = json.decode(response.body);
+//       var responseBody = decode["responseBody"];
+//       allMatchesList.value = responseBody;
+// await processMatchesByDate(allMatchesList, allMatchesByDate);
+//       await processMatchesByDate(
+//         games: allMatchesList,
+//         processedMatchesByDate: allMatchesByDate,
+//       );
+//       isMatchesLoaded.value = true;
+//     }
+//   } catch (e) {
+//     debugPrint(e.toString());
+//   } finally {
+//     isloading.value = false;
+//   }
+// }

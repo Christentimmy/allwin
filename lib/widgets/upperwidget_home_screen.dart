@@ -2,7 +2,7 @@ import 'package:allwin/controller/all_request.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
+
 
 class UpperWidgetHomeScreen extends StatefulWidget {
   final PageController pageController;
@@ -17,7 +17,7 @@ class UpperWidgetHomeScreen extends StatefulWidget {
 
 class _UpperWidgetHomeScreenState extends State<UpperWidgetHomeScreen> {
   final _allRequestController = Get.put(AllRequestController());
-  RxInt _selectedIndex = 0.obs;
+  final RxInt _selectedIndex = 0.obs;
 
   @override
   void initState() {

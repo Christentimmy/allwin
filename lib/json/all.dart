@@ -21958,35 +21958,35 @@ const Map<String, String> leagueImages = {
   "LaLiga": "assets/image/laliga.png",
   "Premier League": "assets/image/pl.jpg",
   "Championship": "assets/image/championship.png",
-  "NBA Regular Season League": "assets/images/nbareg.jpg",
-  "Euroleague: Regular season": "assets/images/euroleague.png",
-  "Lega Basket Serie A": "assets/images/lba.png",
-  "LNB Argentina": "assets/images/laligaArgen.png",
-  "NBB Brazil": "assets/images/nbb.png",
-  "LNB Pro A": "assets/images/lnbpro.png",
-  "Super League Turkiye": "assets/images/turkey.jpg",
-  "Liga ACB Spain": "assets/images/ligaacb.png",
-  "LKL Lithuania": "assets/images/lithlogo.png",
-  "BBL Germany": "assets/images/bbl.jpg",
-  "Super League Israel": "assets/images/isreal.jpg",
-  "CBA China": "assets/images/chinese.jpg",
+  "NBA Regular Season League": "assets/image/nbareg.jpg",
+  "Euroleague: Regular season": "assets/image/euroleague.png",
+  "Lega Basket Serie A": "assets/image/lba.png",
+  "LNB Argentina": "assets/image/laligaArgen.png",
+  "NBB Brazil": "assets/image/nbb.png",
+  "LNB Pro A": "assets/image/lnbpro.png",
+  "Super League Turkiye": "assets/image/turkey.jpg",
+  "Liga ACB Spain": "assets/image/ligaacb.png",
+  "LKL Lithuania": "assets/image/lithlogo.png",
+  "BBL Germany": "assets/image/bbl.jpg",
+  "Super League Israel": "assets/image/isreal.jpg",
+  "CBA China": "assets/image/chinese.jpg",
 };
 
 final Map<String, Map<String, dynamic>> sportsWithIcons = {
-    'Football': {
-      'icon': Icons.sports_football,
-      'color': Colors.green, 
-    },
-    'Basketball': {
-      'icon': Icons.sports_basketball,
-      'color': Colors.orange, 
-    },
-    'Tennis': {
-      'icon': Icons.sports_tennis,
-      'color': Colors.blue, 
-    },
-    'Cricket': {
-      'icon': Icons.sports_baseball, 
-      'color': Colors.brown, 
-    },
-  };
+  'Football': {
+    'icon': Icons.sports_football,
+    'color': Colors.green,
+  },
+  'Basketball': {
+    'icon': Icons.sports_basketball,
+    'color': Colors.orange,
+  },
+  'Tennis': {
+    'icon': Icons.sports_tennis,
+    'color': Colors.blue,
+  },
+  'Cricket': {
+    'icon': Icons.sports_baseball,
+    'color': Colors.brown,
+  },
+};

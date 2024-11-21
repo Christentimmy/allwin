@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen>
   void _onButtonPressed() {
     _animationController.repeat();
 
-    _allRequestController.getLeagueMatch();
+    _allRequestController.refreshAllGamesButton();
 
     Future.delayed(const Duration(milliseconds: 1200), () {
       _animationController.stop();
@@ -82,9 +82,7 @@ class _HomeScreenState extends State<HomeScreen>
                   controller: _pageController,
                   children: [
                     FootballWidget(),
-                    Container(
-                      color: Colors.tealAccent,
-                    ),
+                   TennisWidget(),
                     // Container(color: Colors.green),
                     BasketBallWidget(),
                     Container(color: Colors.blue),
@@ -109,8 +107,11 @@ class FootballWidget extends StatelessWidget {
   final RxString dateClicked = "".obs;
   final _calenderController = Get.put(Calender());
 
+  final _allRequest = Get.put(AllRequestController());
+
   @override
   Widget build(BuildContext context) {
+    print("Footbal Matches: ${_allRequest.allMatchesList.length}");
     return Column(
       children: [
         CalenderRow(
@@ -118,8 +119,15 @@ class FootballWidget extends StatelessWidget {
           dateClciked: dateClicked,
         ),
         const SizedBox(height: 10),
+        // ShowMatches(
+        //   dateClciked: dateClicked,
+        // ),
         ShowMatches(
           dateClciked: dateClicked,
+          isChoosenGameLoaded: _allRequest.isMatchesLoaded,
+          sportId: "2",
+          games: _allRequest.allMatchesList,
+          processedMatchesByDate: _allRequest.allMatchesByDate,
         ),
       ],
     );
@@ -131,11 +139,11 @@ class BasketBallWidget extends StatelessWidget {
 
   final RxString _dateClicked = "".obs;
   final _calenderController = Get.put(Calender());
-
   final _allRequest = Get.put(AllRequestController());
 
   @override
   Widget build(BuildContext context) {
+     print("Basket Matches: ${_allRequest.allBasketBallMatches.length}");
     return Column(
       children: [
         CalenderRow(
@@ -150,13 +158,98 @@ class BasketBallWidget extends StatelessWidget {
         //   },
         //   child: Text("Fetch"),
         // ),
-        ShowBasketBallMatches(
-          dateClicked: _dateClicked,
+        // ShowBasketBallMatches(
+        //   dateClicked: _dateClicked,
+        // ),
+        ShowMatches(
+          dateClciked: _dateClicked,
+          isChoosenGameLoaded: _allRequest.isBasketBallMatchesLoaded,
+          sportId: "4",
+          games: _allRequest.allBasketBallMatches,
+          processedMatchesByDate: _allRequest.allBasketBallMatchesByDate,
         ),
       ],
     );
   }
 }
+
+
+class TennisWidget extends StatelessWidget {
+  TennisWidget({super.key});
+
+  final RxString _dateClicked = "".obs;
+  final _calenderController = Get.put(Calender());
+
+  final _allRequest = Get.put(AllRequestController());
+
+  @override
+  Widget build(BuildContext context) {
+    print("Tennis Matches: ${_allRequest.allTennisMatches.length}");
+    return Column(
+      children: [
+        CalenderRow(
+          dateClciked: _dateClicked,
+          calenderController: _calenderController,
+        ),
+        const SizedBox(height: 10),
+        // ElevatedButton(
+        //   onPressed: () {
+        //     var _allList = _allRequest.allBasketBallMatchesByDate["2024-11-22"];
+        //     print(_allList!.length);
+        //   },
+        //   child: Text("Fetch"),
+        // ),
+        // ShowBasketBallMatches(
+        //   dateClicked: _dateClicked,
+        // ),
+        ShowMatches(
+          dateClciked: _dateClicked,
+          isChoosenGameLoaded: _allRequest.isTennisMatchesLoaded,
+          sportId: "3",
+          games: _allRequest.allTennisMatches,
+          processedMatchesByDate: _allRequest.allTennisMatchesByDate,
+        ),
+      ],
+    );
+  }
+}
+
+
+
+class HandBallWidget extends StatelessWidget {
+  HandBallWidget({super.key});
+
+  final RxString _dateClicked = "".obs;
+  final _calenderController = Get.put(Calender());
+  final _allRequest = Get.put(AllRequestController());
+
+  @override
+  Widget build(BuildContext context) {
+    print("HandBall Matches: ${_allRequest.allTennisMatches.length}");
+    return Column(
+      children: [
+        CalenderRow(
+          dateClciked: _dateClicked,
+          calenderController: _calenderController,
+        ),
+        const SizedBox(height: 10),
+        ShowMatches(
+          dateClciked: _dateClicked,
+          isChoosenGameLoaded: _allRequest.isHandBallMatchesLoaded,
+          sportId: "5",
+          games: _allRequest.allHandBallMatches,
+          processedMatchesByDate: _allRequest.allHandBallMatchesByDates,
+        ),
+      ],
+    );
+  }
+}
+
+
+
+
+
+
 
 class ShowBasketBallMatches extends StatefulWidget {
   final RxString dateClicked;
@@ -176,9 +269,19 @@ class _ShowBasketBallMatchesState extends State<ShowBasketBallMatches> {
   void initState() {
     super.initState();
     if (!_allRequest.isBasketBallMatchesLoaded.value) {
-      _allRequest.getBasketBallGames(context: context);
+      // _allRequest.getBasketBallGames(context: context);
+      getBasket();
       print("yes");
     }
+  }
+
+  void getBasket() async {
+    await _allRequest.getDesiredMatch(
+      sportId: "4",
+      games: _allRequest.allBasketBallMatches,
+      processedMatchesByDate: _allRequest.allBasketBallMatchesByDate,
+      isVarMatchLoaded: _allRequest.isBasketBallMatchesLoaded.value,
+    );
   }
 
   @override

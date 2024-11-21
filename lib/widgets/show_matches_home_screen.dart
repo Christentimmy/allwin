@@ -9,31 +9,51 @@ import 'package:lottie/lottie.dart';
 
 class ShowMatches extends StatefulWidget {
   final RxString dateClciked;
+  final RxBool isChoosenGameLoaded;
+  final String sportId;
+  final RxList<dynamic> games;
+  final RxMap<String, List<League>> processedMatchesByDate;
   const ShowMatches({
     super.key,
     required this.dateClciked,
+    required this.isChoosenGameLoaded,
+    required this.sportId,
+    required this.games,
+    required this.processedMatchesByDate,
   });
-
 
   @override
   State<ShowMatches> createState() => _ShowMatchesState();
 }
 
 class _ShowMatchesState extends State<ShowMatches> {
-  final _allMatches = Get.put(AllRequestController());
+  final _allRequest = Get.put(AllRequestController());
 
   @override
   void initState() {
     super.initState();
-    if (!_allMatches.isMatchesLoaded.value) {
-      _allMatches.getLeagueMatch();
+    if (!widget.isChoosenGameLoaded.value) {
+      // _allRequest.getLeagueMatch()
+      // _allRequest.getDesiredMatch(
+      //   sportId: "2",
+      //   games: _allRequest.allMatchesList,
+      //   processedMatchesByDate: _allRequest.allMatchesByDate,
+      //   isVarMatchLoaded: _allRequest.isMatchesLoaded.value,
+      // );
+
+      _allRequest.getDesiredMatch(
+        sportId: widget.sportId,
+        games: widget.games,
+        processedMatchesByDate: widget.processedMatchesByDate,
+        isVarMatchLoaded: widget.isChoosenGameLoaded.value,
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (_allMatches.isloading.value) {
+      if (_allRequest.isloading.value) {
         return const Expanded(
           child: Center(
             child: CircularProgressIndicator(
@@ -41,10 +61,10 @@ class _ShowMatchesState extends State<ShowMatches> {
             ),
           ),
         );
-      } else if (_allMatches.allMatchesByDate[widget.dateClciked.value] !=
+      } else if (widget.processedMatchesByDate[widget.dateClciked.value] !=
           null) {
         List<League> leagues =
-            _allMatches.allMatchesByDate[widget.dateClciked.value]!;
+            widget.processedMatchesByDate[widget.dateClciked.value]!;
         return Expanded(
           child: ListView.builder(
             itemCount: leagues.length,

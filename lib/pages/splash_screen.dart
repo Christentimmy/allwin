@@ -1,3 +1,4 @@
+import 'package:allwin/controller/all_request.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'onboarding_screen.dart';
@@ -10,15 +11,31 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
     navigate();
     super.initState();
   }
 
+  final _allRequest = Get.put(AllRequestController());
+
   void navigate() async {
-    await Future.delayed(const Duration(seconds: 3)).then((value) {
+    await Future.delayed(const Duration(seconds: 3)).then((value) async {
+      // await _allRequest.getLeagueMatch();
+      await _allRequest.getDesiredMatch(
+        sportId: "2",
+        games: _allRequest.allMatchesList,
+        processedMatchesByDate: _allRequest.allMatchesByDate,
+        isVarMatchLoaded: _allRequest.isMatchesLoaded.value,
+      );
+      // await _allRequest.getBasketBallGames(context: context);
+      await _allRequest.getDesiredMatch(
+        sportId: "4",
+        games: _allRequest.allBasketBallMatches,
+        processedMatchesByDate: _allRequest.allBasketBallMatchesByDate,
+        isVarMatchLoaded: _allRequest.isBasketBallMatchesLoaded.value,
+      );
+      
       Get.to(() => const OnboardingScreen());
     });
   }
