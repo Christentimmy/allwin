@@ -45,7 +45,7 @@ class _ShowMatchesState extends State<ShowMatches> {
         sportId: widget.sportId,
         games: widget.games,
         processedMatchesByDate: widget.processedMatchesByDate,
-        isVarMatchLoaded: widget.isChoosenGameLoaded.value,
+        isVarMatchLoaded: widget.isChoosenGameLoaded,
       );
     }
   }

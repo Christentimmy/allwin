@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:allwin/Resources/colors.dart';
 import 'package:allwin/cards/each_league_game.dart';
 import 'package:allwin/cards/league_header_card.dart';
 import 'package:allwin/controller/all_request.dart';
@@ -27,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
+    autoChangeAdsStatus();
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 600),
@@ -48,6 +52,14 @@ class _HomeScreenState extends State<HomeScreen>
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+
+  RxBool _isAdsVisible = false.obs;
+
+  void autoChangeAdsStatus() {
+    Timer.periodic(const Duration(seconds: 2), (timer) {
+      _isAdsVisible.value = !_isAdsVisible.value;
+    });
   }
 
   @override
@@ -76,18 +88,38 @@ class _HomeScreenState extends State<HomeScreen>
                 pageController: _pageController,
               ),
               const SizedBox(height: 10),
+              Obx(() {
+                if (_isAdsVisible.value) {
+                  return Container(
+                    height: Get.height * 0.089,
+                    width: Get.width,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: AppColors.primaryColor,
+                    ),
+                    child: const Text(
+                      "Ads Widget",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  );
+                }else{
+                  return const SizedBox();
+                }
+              }),
               Expanded(
                 child: PageView(
                   physics: const NeverScrollableScrollPhysics(),
                   controller: _pageController,
                   children: [
                     FootballWidget(),
-                   TennisWidget(),
+                    TennisWidget(),
                     // Container(color: Colors.green),
                     BasketBallWidget(),
-                    Container(color: Colors.blue),
-                    Container(color: Colors.amber),
-                    Container(color: Colors.deepPurpleAccent),
+                    HandBallWidget(),
+                    IceHockeyWidget(),
                   ],
                 ),
               ),
@@ -119,9 +151,6 @@ class FootballWidget extends StatelessWidget {
           dateClciked: dateClicked,
         ),
         const SizedBox(height: 10),
-        // ShowMatches(
-        //   dateClciked: dateClicked,
-        // ),
         ShowMatches(
           dateClciked: dateClicked,
           isChoosenGameLoaded: _allRequest.isMatchesLoaded,
@@ -143,7 +172,7 @@ class BasketBallWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     print("Basket Matches: ${_allRequest.allBasketBallMatches.length}");
+    print("Basket Matches: ${_allRequest.allBasketBallMatches.length}");
     return Column(
       children: [
         CalenderRow(
@@ -172,7 +201,6 @@ class BasketBallWidget extends StatelessWidget {
     );
   }
 }
-
 
 class TennisWidget extends StatelessWidget {
   TennisWidget({super.key});
@@ -214,8 +242,6 @@ class TennisWidget extends StatelessWidget {
   }
 }
 
-
-
 class HandBallWidget extends StatelessWidget {
   HandBallWidget({super.key});
 
@@ -245,11 +271,34 @@ class HandBallWidget extends StatelessWidget {
   }
 }
 
+class IceHockeyWidget extends StatelessWidget {
+  IceHockeyWidget({super.key});
 
+  final RxString _dateClicked = "".obs;
+  final _calenderController = Get.put(Calender());
+  final _allRequest = Get.put(AllRequestController());
 
-
-
-
+  @override
+  Widget build(BuildContext context) {
+    print("HandBall Matches: ${_allRequest.allIceHockeyMatches.length}");
+    return Column(
+      children: [
+        CalenderRow(
+          dateClciked: _dateClicked,
+          calenderController: _calenderController,
+        ),
+        const SizedBox(height: 10),
+        ShowMatches(
+          dateClciked: _dateClicked,
+          isChoosenGameLoaded: _allRequest.isIceHockeyMatchesLoaded,
+          sportId: "6",
+          games: _allRequest.allIceHockeyMatches,
+          processedMatchesByDate: _allRequest.allIceHockeyMatchesByDates,
+        ),
+      ],
+    );
+  }
+}
 
 class ShowBasketBallMatches extends StatefulWidget {
   final RxString dateClicked;
@@ -280,7 +329,7 @@ class _ShowBasketBallMatchesState extends State<ShowBasketBallMatches> {
       sportId: "4",
       games: _allRequest.allBasketBallMatches,
       processedMatchesByDate: _allRequest.allBasketBallMatchesByDate,
-      isVarMatchLoaded: _allRequest.isBasketBallMatchesLoaded.value,
+      isVarMatchLoaded: _allRequest.isBasketBallMatchesLoaded,
     );
   }
 

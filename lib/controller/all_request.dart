@@ -54,7 +54,7 @@ class AllRequestController extends GetxController {
     required var sportId,
     required RxList<dynamic> games,
     required RxMap<String, List<League>> processedMatchesByDate,
-    required bool isVarMatchLoaded,
+    required RxBool isVarMatchLoaded,
   }) async {
     isloading.value = true;
     try {
@@ -72,7 +72,8 @@ class AllRequestController extends GetxController {
           games: games,
           processedMatchesByDate: processedMatchesByDate,
         );
-        isVarMatchLoaded = true;
+
+        isVarMatchLoaded.value = true;
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -235,40 +236,40 @@ class AllRequestController extends GetxController {
   }
 
   Future<void> refreshAllGamesButton() async {
-    
+
     await getDesiredMatch(
       sportId: "2",
       games: allMatchesList,
       processedMatchesByDate: allMatchesByDate,
-      isVarMatchLoaded: isMatchesLoaded.value,
+      isVarMatchLoaded: isMatchesLoaded,
     );
 
     await getDesiredMatch(
       sportId: "3",
       games: allTennisMatches,
       processedMatchesByDate: allTennisMatchesByDate,
-      isVarMatchLoaded: isTennisMatchesLoaded.value,
+      isVarMatchLoaded: isTennisMatchesLoaded,
     );
 
     await getDesiredMatch(
       sportId: "4",
       games: allBasketBallMatches,
       processedMatchesByDate: allBasketBallMatchesByDate,
-      isVarMatchLoaded: isBasketBallMatchesLoaded.value,
+      isVarMatchLoaded: isBasketBallMatchesLoaded,
     );
 
     await getDesiredMatch(
       sportId: "5",
       games: allHandBallMatches,
       processedMatchesByDate: allHandBallMatchesByDates,
-      isVarMatchLoaded: isHandBallMatchesLoaded.value,
+      isVarMatchLoaded: isHandBallMatchesLoaded,
     );
 
     await getDesiredMatch(
       sportId: "6",
       games: allIceHockeyMatches,
       processedMatchesByDate: allIceHockeyMatchesByDates,
-      isVarMatchLoaded: isIceHockeyMatchesLoaded.value,
+      isVarMatchLoaded: isIceHockeyMatchesLoaded,
     );
 
     // await getDesiredMatch(

@@ -20,22 +20,22 @@ class _SplashScreenState extends State<SplashScreen> {
   final _allRequest = Get.put(AllRequestController());
 
   void navigate() async {
-    await Future.delayed(const Duration(seconds: 3)).then((value) async {
+    await Future.delayed(const Duration(seconds: 4)).then((value) async {
       // await _allRequest.getLeagueMatch();
-      await _allRequest.getDesiredMatch(
+      _allRequest.getDesiredMatch(
         sportId: "2",
         games: _allRequest.allMatchesList,
         processedMatchesByDate: _allRequest.allMatchesByDate,
-        isVarMatchLoaded: _allRequest.isMatchesLoaded.value,
+        isVarMatchLoaded: _allRequest.isMatchesLoaded,
       );
       // await _allRequest.getBasketBallGames(context: context);
-      await _allRequest.getDesiredMatch(
+      _allRequest.getDesiredMatch(
         sportId: "4",
         games: _allRequest.allBasketBallMatches,
         processedMatchesByDate: _allRequest.allBasketBallMatchesByDate,
-        isVarMatchLoaded: _allRequest.isBasketBallMatchesLoaded.value,
+        isVarMatchLoaded: _allRequest.isBasketBallMatchesLoaded,
       );
-      
+
       Get.to(() => const OnboardingScreen());
     });
   }

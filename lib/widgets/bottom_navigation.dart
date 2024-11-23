@@ -1,7 +1,9 @@
 import 'package:allwin/pages/booking_code_screen.dart';
+import 'package:allwin/pages/guide_screen.dart';
 import 'package:allwin/pages/homepage_screen.dart';
 import 'package:allwin/pages/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 class BottomNavigation extends StatefulWidget {
@@ -18,6 +20,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   final List<Widget> appPages = [
     const HomeScreen(),
     const BookingCodeScreen(),
+    const GuideScreen(),
     const ProfilePage(),
   ];
 
@@ -50,8 +53,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
             tabs: const [
               GButton(icon: Icons.dashboard, text: "Home"),
               GButton(icon: Icons.confirmation_number, text: "Booking Code"),
+              GButton(icon: FontAwesomeIcons.guilded, text: "Guide"),
               GButton(icon: Icons.account_circle, text: "Account"),
-              // GButton(icon: Icons.refresh, text: "Refresh"),
             ],
             padding: const EdgeInsets.all(10.0),
           ),
