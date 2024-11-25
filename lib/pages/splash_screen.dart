@@ -1,6 +1,8 @@
 import 'package:allwin/controller/all_request.dart';
+import 'package:allwin/widgets/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -20,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
   final _allRequest = Get.put(AllRequestController());
 
   void navigate() async {
-    await Future.delayed(const Duration(seconds: 4)).then((value) async {
+    Future.delayed(const Duration(seconds: 4)).then((value) async {
       // await _allRequest.getLeagueMatch();
       _allRequest.getDesiredMatch(
         sportId: "2",
@@ -28,7 +30,6 @@ class _SplashScreenState extends State<SplashScreen> {
         processedMatchesByDate: _allRequest.allMatchesByDate,
         isVarMatchLoaded: _allRequest.isMatchesLoaded,
       );
-      // await _allRequest.getBasketBallGames(context: context);
       _allRequest.getDesiredMatch(
         sportId: "4",
         games: _allRequest.allBasketBallMatches,
@@ -36,8 +37,20 @@ class _SplashScreenState extends State<SplashScreen> {
         isVarMatchLoaded: _allRequest.isBasketBallMatchesLoaded,
       );
 
-      Get.to(() => const OnboardingScreen());
+      checkUserStatus();
     });
+  }
+
+
+  void checkUserStatus()async{
+    final prefs = await SharedPreferences.getInstance();
+    final bool hasSeenOnboaring = prefs.getBool("hasSeenOnboarding") ?? false;
+
+    if (hasSeenOnboaring) {
+      Get.to(()=> BottomNavigation());
+    }else{
+      Get.to(()=> OnboardingScreen());
+    }
   }
 
   @override

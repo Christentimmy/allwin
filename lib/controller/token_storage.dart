@@ -18,4 +18,5 @@ class TokenStorageController extends GetxController {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("token", "");
   }
+  
 }

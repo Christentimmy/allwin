@@ -6,6 +6,7 @@ import 'package:allwin/intro_screens/intro_page3.dart';
 import 'package:allwin/widgets/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -18,6 +19,17 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final _controller = PageController();
   bool onLastPage = false;
+
+  @override
+  void initState() {
+    super.initState();
+    completeUserStatus();
+  }
+
+  void completeUserStatus()async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("hasSeenOnboarding", true);
+  }
 
   @override
   Widget build(BuildContext context) {
